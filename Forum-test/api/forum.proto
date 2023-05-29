@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api;api";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "api/models/forum.proto";
+import "api/models/thread.proto";
+import "api/models/user.proto";
+
+
+service Forum {
+    // Создание форума
+    // 
+    // Создание нового форума.
+    rpc ForumCreate(ForumCreateRequest) returns (api.models.Forum) {
+        option (google.api.http) = {
+            post: "/api/forum/create"
+            body: "forum"
+        };
+    }
+
+    // Получение информации о форуме
+    // 
+    // Получение информации о форуме по его идентификаторе.
+    rpc ForumGetOne(ForumGetOneRequest) returns (api.models.Forum) {
+        option (google.api.http) = {
+            get: "/api/forum/{slug}/details"
+        };
+    }
+
+    // Список ветвей обсужления форума
+    // 
+    // Получение списка ветвей обсужления данного форума.
+    // 
+    // Ветви обсуждения выводятся отсортированные по дате создания.
+    rpc ForumGetThreads(ForumGetThreadsRequest) returns (api.models.Thread) {
+        option (google.api.http) = {
+            get: "/api/forum/{slug}/threads"
+        };
+    }
+
+    // Пользователи данного форума
+    // 
+    // Получение списка пользователей, у которых есть пост или ветка обсуждения в данном форуме.
+    // 
+    // Пользователи выводятся отсортированные по nickname в порядке возрастания.
+    // Порядок сотрировки должен соответсвовать побайтовому сравнение в нижнем регистре.
+    rpc ForumGetUsers(ForumGetUsersRequest) returns (ForumGetUsersResponse) {
+        option (google.api.http) = {
+            get: "/api/forum/{slug}/users"
+        };
+    }
+}
+
+message ForumCreateRequest {
+    // Данные форума.
+    api.models.Forum forum = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ForumGetOneRequest {
+    // Идентификатор форума.
+    string slug = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ForumGetThreadsRequest {
+    // Флаг сортировки по убыванию.
+    bool desc = 1;
+
+    // Максимальное кол-во возвращаемых записей.
+    int32 limit = 2;
+
+    // Дата создания ветви обсуждения, с которой будут выводиться записи
+    // (ветвь обсуждения с указанной датой попадает в результат выборки).
+    string since = 3;
+
+    // Идентификатор форума.
+    string slug = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ForumGetUsersRequest {
+    // Флаг сортировки по убыванию.
+    bool desc = 1;
+
+    // Максимальное кол-во возвращаемых записей.
+    int32 limit = 2;
+
+    // Идентификатор пользователя, с которого будут выводиться пользоватли
+    // (пользователь с данным идентификатором в результат не попадает).
+    string since = 3;
+
+    // Идентификатор форума.
+    string slug = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ForumGetUsersResponse {
+    repeated api.models.User users = 1;
+}

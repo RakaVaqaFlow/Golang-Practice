@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api/models;models";
+
+import "google/api/field_behavior.proto";
+
+
+// Информация о пользователе.
+message User {
+    // Описание пользователя.
+    string about = 1;
+
+    // Почтовый адрес пользователя (уникальное поле).
+    string email = 2 [(google.api.field_behavior) = REQUIRED];
+
+    // Полное имя пользователя.
+    string fullname = 3 [(google.api.field_behavior) = REQUIRED];
+
+    // Имя пользователя (уникальное поле).
+    // Данное поле допускает только латиницу, цифры и знак подчеркивания.
+    // Сравнение имени регистронезависимо.
+    string nickname = 4;
+}
+
+// Информация о пользователе.
+message Profile {
+    // Описание пользователя.
+    string about = 1;
+
+    // Почтовый адрес пользователя (уникальное поле).
+    string email = 2;
+
+    // Полное имя пользователя.
+    string fullname = 3;
+}

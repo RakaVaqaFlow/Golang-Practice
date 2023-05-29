@@ -1,0 +1,17 @@
+pools:
+  - id: GRPC pool
+    gun:
+      type: My_custom_gun_name   # custom gun name specified
+      target: "localhost:6000"
+    ammo:
+      type: custom_provider
+      source:
+        type: file
+        path: ./json.ammo
+    result:
+      type: phout
+      destination: ./phout.log
+    rps: {duration: 30s, type: line,  from: 1, to: 2}
+    startup:
+      type: once
+      times: 10

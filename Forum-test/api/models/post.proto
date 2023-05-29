@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api/models;models";
+
+import "api/models/user.proto";
+import "api/models/forum.proto";
+import "api/models/thread.proto";
+
+
+// Сообщение внутри ветки обсуждения на форуме.
+message Post {
+    // Автор, написавший данное сообщение.
+    string author = 1;
+
+    // Дата создания сообщения на форуме.
+    string created = 2;
+
+    // Идентификатор форума (slug) данного сообещния.
+    string forum = 3;
+
+    // Идентификатор данного сообщения.
+    int64 id = 4;
+
+    // Истина, если данное сообщение было изменено.
+    bool isEdited = 5;
+
+    // Собственно сообщение форума.
+    string message = 6;
+
+    // Идентификатор родительского сообщения (0 - корневое сообщение обсуждения).
+    int64 parent = 7;
+
+    // Идентификатор ветви (id) обсуждения данного сообещния.
+    int32 thread = 8;
+}
+
+// Полная информация о сообщении, включая связанные объекты.
+message PostFull {
+    User author = 1;
+    Forum forum = 2;
+    Post post = 3;
+    Thread thread = 4;
+}

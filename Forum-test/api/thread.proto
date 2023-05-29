@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api;api";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "api/models/post.proto";
+import "api/models/thread.proto";
+
+
+service Thread {
+    // Создание ветки
+    // 
+    // Добавление новой ветки обсуждения на форум.
+    rpc ThreadCreate(ThreadCreateRequest) returns (api.models.Thread) {
+        option (google.api.http) = {
+            post: "/api/forum/{slug}/create"
+            body: "thread"
+        };
+    }
+
+    // Получение информации о ветке обсуждения
+    // 
+    // Получение информации о ветке обсуждения по его имени.
+    rpc ThreadGetOne(ThreadGetOneRequest) returns (api.models.Thread) {
+        option (google.api.http) = {
+            get: "/api/thread/{slug_or_id}/details"
+        };
+    }
+
+    // Сообщения данной ветви обсуждения
+    // 
+    // Получение списка сообщений в данной ветке форуме.
+    // 
+    // Сообщения выводятся отсортированные по дате создания.
+    rpc ThreadGetPosts(ThreadGetPostsRequest) returns (api.models.Thread) {
+        option (google.api.http) = {
+            get: "/api/thread/{slug_or_id}/posts"
+        };
+    }
+
+    // Обновление ветки
+    // 
+    // Обновление ветки обсуждения на форуме.
+    rpc ThreadUpdate(ThreadUpdateRequest) returns (api.models.Thread) {
+        option (google.api.http) = {
+            post: "/api/thread/{slug_or_id}/details"
+            body: "thread"
+        };
+    }
+
+    // Проголосовать за ветвь обсуждения
+    // 
+    // Изменение голоса за ветвь обсуждения.
+    // 
+    // Один пользователь учитывается только один раз и может изменить своё
+    // мнение.
+    rpc ThreadVote(ThreadVoteRequest) returns (api.models.Thread) {
+        option (google.api.http) = {
+            post: "/api/thread/{slug_or_id}/vote"
+            body: "vote"
+        };
+    }
+}
+
+
+message ThreadCreateRequest {
+    // Идентификатор форума.
+    string slug = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Данные ветки обсуждения.
+    api.models.Thread thread = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ThreadGetOneRequest {
+    // Идентификатор ветки обсуждения.
+    string slug_or_id = 1;
+}
+
+message ThreadGetPostsRequest {
+    enum ThreadGetPostsRequestSort {
+        THREAD_GET_POSTS_REQUEST_SORT_FLAT = 0;
+        THREAD_GET_POSTS_REQUEST_SORT_TREE = 1;
+        THREAD_GET_POSTS_REQUEST_SORT_PARENT_TREE = 2;
+    }
+
+    // Флаг сортировки по убыванию.
+    bool desc = 1;
+
+    // Максимальное кол-во возвращаемых записей.
+    int32 limit = 2;
+
+    // Идентификатор поста, после которого будут выводиться записи
+    // (пост с данным идентификатором в результат не попадает).
+    int64 since = 3;
+
+    // Идентификатор ветки обсуждения.
+    string slug_or_id = 4 [(google.api.field_behavior) = REQUIRED];
+
+    // Вид сортировки:
+    // 
+    //  * flat - по дате, комментарии выводятся простым списком в порядке создания;
+    //  * tree - древовидный, комментарии выводятся отсортированные в дереве
+    //    по N штук;
+    //  * parent_tree - древовидные с пагинацией по родительским (parent_tree),
+    //    на странице N родительских комментов и все комментарии прикрепленные
+    //    к ним, в древвидном отображение.
+    // 
+    // Подробности: https://park.mail.ru/blog/topic/view/1191/
+    ThreadGetPostsRequestSort sort = 5;
+}
+
+message ThreadUpdateRequest {
+    // Идентификатор ветки обсуждения.
+    string slug_or_id = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Сообщение для обновления ветки обсуждения на форуме.
+    // Пустые параметры остаются без изменений.
+    message ThreadUpdate {
+        // Описание ветки обсуждения.
+        string message = 1;
+
+        // Заголовок ветки обсуждения.
+        string title = 2;
+    }
+
+    // Данные ветки обсуждения.
+    ThreadUpdate thread = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message ThreadVoteRequest {
+    // Идентификатор ветки обсуждения.
+    string slug_or_id = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Информация о голосовании пользователя.
+    api.models.Vote vote = 2 [(google.api.field_behavior) = REQUIRED];
+}

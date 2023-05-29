@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:14.4
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: forum
+    container_name: 'postgresql-container-forum'
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data # том для того, чтобы при перезапуске контейнера все данные сохранялись
+      - ./postgres.conf:/etc/postgresql/postgresql.conf # конфиг БД
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
+    ports:
+      - 5432:5432
+    restart: always

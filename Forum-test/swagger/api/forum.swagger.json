@@ -1,0 +1,352 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/forum.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Forum"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/forum/create": {
+      "post": {
+        "summary": "Создание форума",
+        "description": "Создание нового форума.",
+        "operationId": "Forum_ForumCreate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsForum"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "forum",
+            "description": "Данные форума.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/modelsForum"
+            }
+          }
+        ],
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/forum/{slug}/details": {
+      "get": {
+        "summary": "Получение информации о форуме",
+        "description": "Получение информации о форуме по его идентификаторе.",
+        "operationId": "Forum_ForumGetOne",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsForum"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "description": "Идентификатор форума.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/forum/{slug}/threads": {
+      "get": {
+        "summary": "Список ветвей обсужления форума",
+        "description": "Получение списка ветвей обсужления данного форума.\n\nВетви обсуждения выводятся отсортированные по дате создания.",
+        "operationId": "Forum_ForumGetThreads",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsThread"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "description": "Идентификатор форума.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "desc",
+            "description": "Флаг сортировки по убыванию.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "description": "Максимальное кол-во возвращаемых записей.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "since",
+            "description": "Дата создания ветви обсуждения, с которой будут выводиться записи\n(ветвь обсуждения с указанной датой попадает в результат выборки).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Forum"
+        ]
+      }
+    },
+    "/api/forum/{slug}/users": {
+      "get": {
+        "summary": "Пользователи данного форума",
+        "description": "Получение списка пользователей, у которых есть пост или ветка обсуждения в данном форуме.\n\nПользователи выводятся отсортированные по nickname в порядке возрастания.\nПорядок сотрировки должен соответсвовать побайтовому сравнение в нижнем регистре.",
+        "operationId": "Forum_ForumGetUsers",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiForumGetUsersResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "slug",
+            "description": "Идентификатор форума.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "desc",
+            "description": "Флаг сортировки по убыванию.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "limit",
+            "description": "Максимальное кол-во возвращаемых записей.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "since",
+            "description": "Идентификатор пользователя, с которого будут выводиться пользоватли\n(пользователь с данным идентификатором в результат не попадает).",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Forum"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiForumGetUsersResponse": {
+      "type": "object",
+      "properties": {
+        "users": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/modelsUser"
+          }
+        }
+      }
+    },
+    "modelsForum": {
+      "type": "object",
+      "properties": {
+        "posts": {
+          "type": "string",
+          "format": "int64",
+          "description": "Общее кол-во сообщений в данном форуме."
+        },
+        "slug": {
+          "type": "string",
+          "description": "Человекопонятный URL (https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%BC%D0%B0%D0%BD%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_URL), уникальное поле.",
+          "required": [
+            "slug"
+          ]
+        },
+        "threads": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Общее кол-во ветвей обсуждения в данном форуме."
+        },
+        "title": {
+          "type": "string",
+          "description": "Название форума.",
+          "required": [
+            "title"
+          ]
+        },
+        "user": {
+          "type": "string",
+          "description": "Nickname пользователя, который отвечает за форум.",
+          "required": [
+            "user"
+          ]
+        }
+      },
+      "description": "Информация о форуме.",
+      "required": [
+        "slug",
+        "title",
+        "user"
+      ]
+    },
+    "modelsThread": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string",
+          "description": "Пользователь, создавший данную тему."
+        },
+        "created": {
+          "type": "string",
+          "description": "Дата создания ветки на форуме."
+        },
+        "forum": {
+          "type": "string",
+          "description": "Форум, в котором расположена данная ветка обсуждения."
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Идентификатор ветки обсуждения."
+        },
+        "message": {
+          "type": "string",
+          "description": "Описание ветки обсуждения."
+        },
+        "slug": {
+          "type": "string",
+          "description": "Человекопонятный URL (https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%BC%D0%B0%D0%BD%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_URL).\nВ данной структуре slug опционален и не может быть числом."
+        },
+        "title": {
+          "type": "string",
+          "description": "Заголовок ветки обсуждения."
+        },
+        "votes": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Кол-во голосов непосредственно за данное сообщение форума."
+        }
+      },
+      "description": "Ветка обсуждения на форуме."
+    },
+    "modelsUser": {
+      "type": "object",
+      "properties": {
+        "about": {
+          "type": "string",
+          "description": "Описание пользователя."
+        },
+        "email": {
+          "type": "string",
+          "description": "Почтовый адрес пользователя (уникальное поле).",
+          "required": [
+            "email"
+          ]
+        },
+        "fullname": {
+          "type": "string",
+          "description": "Полное имя пользователя.",
+          "required": [
+            "fullname"
+          ]
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Имя пользователя (уникальное поле).\nДанное поле допускает только латиницу, цифры и знак подчеркивания.\nСравнение имени регистронезависимо."
+        }
+      },
+      "description": "Информация о пользователе.",
+      "required": [
+        "email",
+        "fullname"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

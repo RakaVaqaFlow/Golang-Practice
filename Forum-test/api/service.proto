@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api;api";
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+
+
+service Admin {
+    // Очистка всех данных в базе
+    // 
+    // Безвозвратное удаление всей пользовательской информации из базы данных.
+    rpc Clear(google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option (google.api.http) = {
+            post: "/api/service/clear"
+        };
+    }
+
+    // Получение инфомарции о базе данных
+    // 
+    // Получение инфомарции о базе данных.
+    rpc Status(google.protobuf.Empty) returns (StatusResponse) {
+        option (google.api.http) = {
+            get: "/api/service/status"
+        };
+    }
+}
+
+message StatusResponse {
+    // Кол-во разделов в базе данных.
+    int32 forum = 1;
+
+    // Кол-во сообщений в базе данных.
+    int64 post = 2;
+
+    // Кол-во веток обсуждения в базе данных.
+    int32 thread = 3;
+
+    // Кол-во пользователей в базе данных.
+    int32 user = 4;
+}

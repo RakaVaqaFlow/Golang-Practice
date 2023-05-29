@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api/models;models";
+
+import "google/api/field_behavior.proto";
+
+// Информация о форуме.
+message Forum {
+    // Общее кол-во сообщений в данном форуме.
+    int64 posts = 1;
+
+    // Человекопонятный URL (https://ru.wikipedia.org/wiki/%D0%A1%D0%B5%D0%BC%D0%B0%D0%BD%D1%82%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9_URL), уникальное поле.
+    string slug = 2 [(google.api.field_behavior) = REQUIRED];
+
+    // Общее кол-во ветвей обсуждения в данном форуме.
+    int32 threads = 3;
+
+    // Название форума.
+    string title = 4 [(google.api.field_behavior) = REQUIRED];
+
+    // Nickname пользователя, который отвечает за форум.
+    string user = 5 [(google.api.field_behavior) = REQUIRED];
+}

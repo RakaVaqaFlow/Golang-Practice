@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api;api";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "api/models/user.proto";
+
+
+service User {
+    // Создание нового пользователя
+    // 
+    // Создание нового пользователя в базе данных.
+    rpc UserCreate(UserCreateRequest) returns (api.models.User) {
+        option (google.api.http) = {
+            post: "/api/user/{nickname}/create"
+            body: "profile"
+        };
+    }
+
+
+    // Получение информации о пользователе
+    // 
+    // Получение информации о пользователе форума по его имени.
+    rpc UserGetOne(UserGetOneRequest) returns (api.models.User) {
+        option (google.api.http) = {
+            get: "/api/user/{nickname}/profile"
+        };
+    }
+
+    // Изменение данных о пользователе
+    // 
+    // Изменение информации в профиле пользователя.
+    rpc UserUpdate(UserUpdateRequest) returns (api.models.User) {
+        option (google.api.http) = {
+            post: "/api/user/{nickname}/profile"
+            body: "profile"
+        };
+    }
+}
+
+message UserCreateRequest {
+    // Идентификатор пользователя. Регистронезависимый
+    string nickname = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Данные пользовательского профиля.
+    api.models.Profile profile = 2 [(google.api.field_behavior) = REQUIRED];
+
+    int64  age = 3;
+}
+
+message UserCreateRequestV2 {
+    // Идентификатор пользователя. Регистронезависимый
+    string nickname = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Данные пользовательского профиля.
+    api.models.Profile profile = 2 [(google.api.field_behavior) = REQUIRED];
+
+    int64  age = 3;
+}
+
+message UserGetOneRequest {
+    // Идентификатор пользователя.
+    string nickname = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message UserUpdateRequest {
+    // Идентификатор пользователя.
+    string nickname = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Изменения профиля пользователя.
+    api.models.Profile profile = 2 [(google.api.field_behavior) = REQUIRED];
+}

@@ -1,0 +1,214 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/user.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "User"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/user/{nickname}/create": {
+      "post": {
+        "summary": "Создание нового пользователя",
+        "description": "Создание нового пользователя в базе данных.",
+        "operationId": "User_UserCreate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsUser"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "nickname",
+            "description": "Идентификатор пользователя. Регистронезависимый",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "profile",
+            "description": "Данные пользовательского профиля.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/modelsProfile"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/api/user/{nickname}/profile": {
+      "get": {
+        "summary": "Получение информации о пользователе",
+        "description": "Получение информации о пользователе форума по его имени.",
+        "operationId": "User_UserGetOne",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsUser"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "nickname",
+            "description": "Идентификатор пользователя.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "post": {
+        "summary": "Изменение данных о пользователе",
+        "description": "Изменение информации в профиле пользователя.",
+        "operationId": "User_UserUpdate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/modelsUser"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "nickname",
+            "description": "Идентификатор пользователя.",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "profile",
+            "description": "Изменения профиля пользователя.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/modelsProfile"
+            }
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "modelsProfile": {
+      "type": "object",
+      "properties": {
+        "about": {
+          "type": "string",
+          "description": "Описание пользователя."
+        },
+        "email": {
+          "type": "string",
+          "description": "Почтовый адрес пользователя (уникальное поле)."
+        },
+        "fullname": {
+          "type": "string",
+          "description": "Полное имя пользователя."
+        }
+      },
+      "description": "Информация о пользователе."
+    },
+    "modelsUser": {
+      "type": "object",
+      "properties": {
+        "about": {
+          "type": "string",
+          "description": "Описание пользователя."
+        },
+        "email": {
+          "type": "string",
+          "description": "Почтовый адрес пользователя (уникальное поле).",
+          "required": [
+            "email"
+          ]
+        },
+        "fullname": {
+          "type": "string",
+          "description": "Полное имя пользователя.",
+          "required": [
+            "fullname"
+          ]
+        },
+        "nickname": {
+          "type": "string",
+          "description": "Имя пользователя (уникальное поле).\nДанное поле допускает только латиницу, цифры и знак подчеркивания.\nСравнение имени регистронезависимо."
+        }
+      },
+      "description": "Информация о пользователе.",
+      "required": [
+        "email",
+        "fullname"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

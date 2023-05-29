@@ -1,0 +1,25 @@
+version: v1
+plugins:
+   # protoc-gen-go - go types
+  - name: go
+    out: pkg
+    opt:
+      - paths=source_relative
+  # protoc-gen-go-grpc - grpc 
+  - name: go-grpc
+    out: pkg
+    opt:
+      - paths=source_relative
+  # protoc-gen-grpc-gateway - proxy
+  - name: grpc-gateway
+    out: pkg/gw
+    opt:
+      - paths=source_relative
+      - generate_unbound_methods=true
+      - standalone=true
+      - logtostderr=true
+  # protoc-gen-openapiv2 - swagger api
+  - name: openapiv2
+    out: swagger
+    opt:
+      - logtostderr=true

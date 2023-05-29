@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package github.storm5758.Forum_test.api;
+
+option go_package = "github.com/storm5758/Forum-test/pkg/api;api";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "api/models/forum.proto";
+import "api/models/post.proto";
+import "api/models/user.proto";
+
+
+service Post {
+    // Создание новых постов
+    // 
+    // Добавление новых постов в ветку обсуждения на форум.
+    // 
+    // Все посты, созданные в рамках одного вызова данного метода должны иметь одинаковую дату создания (Post.Created).
+    rpc PostsCreate(PostsCreateRequest) returns (api.models.Post) {
+        option (google.api.http) = {
+            post: "/api/thread/{slug_or_id}/create"
+            body: "posts"
+        };
+    }
+
+    // Получение информации о ветке обсуждения
+    // 
+    // Получение информации о ветке обсуждения по его имени.
+    rpc PostGetOne(PostGetOneRequest) returns (api.models.PostFull) {
+        option (google.api.http) = {
+            get: "/api/post/{id}/details"
+        };
+    }
+
+    // Изменение сообщения
+    // 
+    // Изменение сообщения на форуме.
+    // 
+    // Если сообщение поменяло текст, то оно должно получить отметку `isEdited`.
+    rpc PostUpdate(PostUpdateRequest) returns (api.models.Post) {
+        option (google.api.http) = {
+            post: "/api/post/{id}/details"
+            body: "post"
+        };
+    }
+}
+
+message PostsCreateRequest {
+    // Список создаваемых постов.
+    api.models.Post posts = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Идентификатор ветки обсуждения.
+    string slug_or_id = 2 [(google.api.field_behavior) = REQUIRED];
+}
+
+message PostGetOneRequest {
+    enum Related {
+        RELATED_USER = 0;
+        RELATED_FORUM = 1;
+        RELATED_THREAD = 2;
+    }
+
+    // Идентификатор сообщения.
+    int64 id = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Включение полной информации о соответвующем объекте сообщения.
+    // 
+    // Если тип объекта не указан, то полная информация об этих объектах не
+    // передаётся.
+    repeated Related related = 2;
+}
+
+
+message PostUpdateRequest {
+    // Идентификатор сообщения.
+    int64 id = 1 [(google.api.field_behavior) = REQUIRED];
+
+    // Сообщение для обновления сообщения внутри ветки на форуме.
+    // Пустые параметры остаются без изменений.
+    message PostUpdate {
+        // Собственно сообщение форума.
+        string message = 1 ;
+    }
+
+    // Изменения сообщения.
+    PostUpdate post = 2 [(google.api.field_behavior) = REQUIRED];
+}
+

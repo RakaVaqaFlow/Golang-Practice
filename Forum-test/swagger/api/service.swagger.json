@@ -1,0 +1,123 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "api/service.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Admin"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/service/clear": {
+      "post": {
+        "summary": "Очистка всех данных в базе",
+        "description": "Безвозвратное удаление всей пользовательской информации из базы данных.",
+        "operationId": "Admin_Clear",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    },
+    "/api/service/status": {
+      "get": {
+        "summary": "Получение инфомарции о базе данных",
+        "description": "Получение инфомарции о базе данных.",
+        "operationId": "Admin_Status",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiStatusResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Admin"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiStatusResponse": {
+      "type": "object",
+      "properties": {
+        "forum": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Кол-во разделов в базе данных."
+        },
+        "post": {
+          "type": "string",
+          "format": "int64",
+          "description": "Кол-во сообщений в базе данных."
+        },
+        "thread": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Кол-во веток обсуждения в базе данных."
+        },
+        "user": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Кол-во пользователей в базе данных."
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
