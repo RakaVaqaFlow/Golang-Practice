@@ -1,0 +1,139 @@
+syntax = "proto3";
+
+package management_system;
+option go_package = "./;pb";
+
+service ManagementSystemSevice {
+    // создать нового пользователя
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+    // создать новую задачу 
+    rpc CreateTask (CreateTaskRequest) returns (CreateTaskResponse) {}
+    // получить пользователя по id
+    rpc GetUser (GetUserRequest) returns (GetUserResponse) {}
+    // получить задачу по id
+    rpc GetTask (GetTaskRequest) returns (GetTaskResponse) {}
+    // получить список всех пользователей
+    rpc ListUsers (GetUsersRequest) returns (GetUsersResponse) {}
+    // получить список всех задач
+    rpc ListTasks (GetTasksRequest) returns (GetTasksResponse) {}
+    // обновить данные пользователя
+    rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {}
+    // обновить данные задачи
+    rpc UpdateTask (UpdateTaskRequest) returns (UpdateTaskResponse) {}
+    // удалить пользователя
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse) {}
+    // удалить задачу
+    rpc DeleteTask (DeleteTaskRequest) returns (DeleteTaskResponse) {}
+}
+
+// структура пользователя
+message User {
+    int64 id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+}
+
+// структура задачи
+message Task {
+    int64 id = 1;
+    int64 user_id = 2;
+    string title = 3;
+    string description = 4;
+}
+
+// создание пользователя
+message CreateUserRequest {
+    string name = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message CreateUserResponse {
+    int64 id = 1;
+}
+
+// создание задачи
+message CreateTaskRequest {
+    int64 user_id = 1;
+    string title = 2;
+    string description = 3;
+}
+
+message CreateTaskResponse {
+    int64 id = 1;
+}
+
+// получение пользователя
+message GetUserRequest {
+    int64 id = 1;
+}
+
+message GetUserResponse {
+    User user = 1;
+}
+
+// получение задачи
+message GetTaskRequest {
+    int64 id = 1;
+}
+
+message GetTaskResponse {
+    Task task = 1;
+}
+
+// получение списка пользователей
+message GetUsersRequest {}
+
+message GetUsersResponse {
+    repeated User users = 1;
+}
+
+// получение списка задач
+message GetTasksRequest {}
+
+message GetTasksResponse {
+    repeated Task tasks = 1;
+}
+
+// обновление данных пользователя
+message UpdateUserRequest {
+    int64 id = 1;
+    string name = 2;
+    string email = 3;
+    string password = 4;
+}
+
+message UpdateUserResponse {
+    bool ok = 1;
+}
+
+// обновление данных задачи
+message UpdateTaskRequest {
+    int64 id = 1;
+    int64 user_id = 2;
+    string title = 3;
+    string description = 4;
+}
+
+message UpdateTaskResponse {
+    bool ok = 1;
+}
+
+// удаление пользователя
+message DeleteUserRequest {
+    int64 id = 1;
+}
+
+message DeleteUserResponse {
+    bool ok = 1;
+}
+
+// удаление задачи
+message DeleteTaskRequest {
+    int64 id = 1;
+}
+
+message DeleteTaskResponse {
+    bool ok = 1;
+}
