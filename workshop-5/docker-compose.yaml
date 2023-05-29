@@ -1,0 +1,17 @@
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"
+  cache:
+    image: memcached:1.6.7
+    command:
+      - '-m 1024'
+      - '-c 1024'
+      - '-t 2'
+    ports:
+      - "11211:11211"
