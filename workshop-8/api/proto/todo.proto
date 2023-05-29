@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package todo;
+option go_package = "./;pb";
+
+service TodoService {
+  // Создает новую запись
+  rpc CreateTodo (CreateTodoRequest) returns (CreateTodoResponse) {}
+  // Получение списка
+  rpc ListTodo (ListTodoRequest) returns (ListTodoResponse) {}
+  // Удаляет запись по ID
+  rpc DeleteTodo (DeleteTodoRequest) returns (DeleteTodoResponse) {}
+}
+
+message CreateTodoRequest {
+  string text = 1 ;
+  string user_id = 2;
+}
+
+message CreateTodoResponse {
+  uint32 id = 1;
+}
+
+message ListTodoRequest {
+  message Pagination {
+    uint32 page = 1;
+    uint32 limit = 2;
+  }
+  string user_id = 1;
+  Pagination pagination = 2;
+}
+
+message Todo {
+  uint32 id = 1;
+  string text = 2;
+}
+
+message ListTodoResponse {
+  repeated Todo todos = 1;
+}
+
+message DeleteTodoRequest {
+  uint32 id = 1;
+}
+
+message DeleteTodoResponse {
+  bool ok = 2;
+}
+
+

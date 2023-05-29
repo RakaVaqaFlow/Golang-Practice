@@ -1,0 +1,32 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Todo {
+    id: Int!
+    text: String!
+    done: Boolean!
+    userId: String!
+}
+
+type Query {
+    todos(pagination: Pagination!): [Todo!]!
+}
+
+input Pagination {
+    page: Int!
+    limit:Int!
+}
+
+input NewTodo {
+    text: String!
+    userId: String!
+}
+
+type Mutation {
+    createTodo(input: NewTodo!): Todo!
+    deleteTodo(id: Int!): Boolean!
+}
+
+directive @goField(forceResolver: Boolean, name: String) on INPUT_FIELD_DEFINITION
+    | FIELD_DEFINITION
