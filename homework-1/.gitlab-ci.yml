@@ -1,0 +1,42 @@
+default:
+  image: golang:latest
+
+stages:
+  - top10
+  - unpack
+
+asterisk top10 test:
+  stage: top10
+  script:
+    - go test ./top10 -run Asterisk
+  rules:
+    - when: always
+
+required top10 test:
+  stage: top10
+  script:
+    - go test ./top10 -run Required
+  rules:
+    - when: always
+
+
+required unpack test:
+  stage: unpack
+  script:
+    - go test ./unpack -run Required
+  rules:
+    - when: always
+
+required unpack incorrect test:
+  stage: unpack
+  script:
+    - go test ./unpack -run Invalid
+  rules:
+    - when: always
+
+asterisk unpack test:
+  stage: unpack
+  script:
+    - go test ./unpack -run Asterisk
+  rules:
+    - when: always
